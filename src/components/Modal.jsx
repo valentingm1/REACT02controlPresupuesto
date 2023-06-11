@@ -1,9 +1,10 @@
 import React from "react";
 import cerrarBtn from "../img/cerrar.svg";
 import Mensaje from "./Mensaje";
+
 import { useState } from "react";
 
-const Modal = ({ setModal, animarModal, setAnimarModal }) => {
+const Modal = ({ setModal, animarModal, setAnimarModal, guardarGastos }) => {
   const [nombre, setNombre] = useState("");
   const [cantidad, setCantidad] = useState("");
   const [categoria, setCategoria] = useState("");
@@ -29,6 +30,7 @@ const Modal = ({ setModal, animarModal, setAnimarModal }) => {
 
         return
     }
+    guardarGastos({nombre,cantidad,categoria})
   }
 
   return (
