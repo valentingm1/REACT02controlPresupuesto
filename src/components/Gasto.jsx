@@ -1,4 +1,4 @@
-import { formatFecha } from "./helpers";
+import { formatFecha } from "../helpers";
 import {
   LeadingActions,
   SwipeAction,
@@ -25,32 +25,39 @@ const listaIconos = {
   suscripciones: IconoSuscripciones,
 };
 
-const Gasto = ({ gasto, setEditarGasto,eliminarGasto }) => {
+const Gasto = ({ gasto, setEditarGasto, eliminarGasto }) => {
   const { nombre, categoria, cantidad, id, fecha } = gasto;
-
 
   const leadingActions = () => (
     <LeadingActions>
-      <SwipeAction onClick={() => {setEditarGasto(gasto)}}>
+      <SwipeAction
+        onClick={() => {
+          setEditarGasto(gasto);
+        }}
+      >
         Editar
       </SwipeAction>
     </LeadingActions>
-  )
+  );
 
   const trailingActions = () => (
     <TrailingActions>
-      <SwipeAction onClick={() => {eliminarGasto(id)}}
-      destructive={true}>
+      <SwipeAction
+        onClick={() => {
+          eliminarGasto(id);
+        }}
+        destructive={true}
+      >
         Eliminar
       </SwipeAction>
     </TrailingActions>
-  )
+  );
 
   return (
     <SwipeableList>
       <SwipeableListItem
-      leadingActions={leadingActions()}
-      trailingActions={trailingActions()}
+        leadingActions={leadingActions()}
+        trailingActions={trailingActions()}
       >
         <div className="gasto sombra">
           <div className="contenido-gasto">
