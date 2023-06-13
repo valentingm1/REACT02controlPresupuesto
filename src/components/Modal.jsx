@@ -2,39 +2,59 @@ import React from "react";
 import cerrarBtn from "../img/cerrar.svg";
 import Mensaje from "./Mensaje";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-const Modal = ({ setModal, animarModal, setAnimarModal, guardarGastos }) => {
+const Modal = ({
+  setModal,
+  animarModal,
+  setAnimarModal,
+  guardarGastos,
+  editarGasto,
+  setEditarGasto
+}) => {
   const [nombre, setNombre] = useState("");
   const [cantidad, setCantidad] = useState("");
   const [categoria, setCategoria] = useState("");
-  const [mensaje, setMensaje] = useState("")
-  const [disable, setDisable] = useState("true")
+  const [mensaje, setMensaje] = useState("");
+  const [id, setId] = useState("")
+  const [fecha, setFecha] = useState("")
+
+
+  useEffect(() => {
+    if (Object.keys(editarGasto).length > 0) {
+      setNombre(editarGasto.nombre);
+      setCantidad(editarGasto.cantidad);
+      setCategoria(editarGasto.categoria);
+      setId(editarGasto.id)
+      setFecha(editarGasto.fecha)
+    }
+  }, []);
 
   const ocultarModal = () => {
     setAnimarModal(false);
+    setEditarGasto({})
 
     setTimeout(() => {
       setModal(false);
     }, 250);
   };
 
-  const handleSubmit = e => {
-    e.preventDefault()
-    
-    if([nombre,cantidad,categoria].includes('')){
-        setMensaje("Uno de los campos está vacío")
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-        setTimeout(() => {
-            setMensaje("")
-        }, 3000)
+    if ([nombre, cantidad, categoria].includes("")) {
+      setMensaje("Uno de los campos está vacío");
 
-        return
+      setTimeout(() => {
+        setMensaje("");
+      }, 3000);
+
+      return;
     }
-    guardarGastos({nombre,cantidad,categoria})
-    setModal(false)
-    setAnimarModal(false)
-  }
+    guardarGastos({ nombre, cantidad, categoria, id, fecha });
+    setModal(false);
+    setAnimarModal(false);
+  };
 
   return (
     <div className="modal">
@@ -50,7 +70,7 @@ const Modal = ({ setModal, animarModal, setAnimarModal, guardarGastos }) => {
         className={`formulario ${animarModal ? "animar" : "cerrar"}`}
         onSubmit={handleSubmit}
       >
-        <legend>Nuevo Gasto</legend>
+        <legend>{editarGasto.nombre ? "Editar Gasto" : "Nuevo Gasto"}</legend>
         {mensaje && <Mensaje tipo="error">{mensaje}</Mensaje>}
 
         <div className="campo">
@@ -94,7 +114,7 @@ const Modal = ({ setModal, animarModal, setAnimarModal, guardarGastos }) => {
           </select>
         </div>
 
-        <input type="submit" value="Añadir Gasto" />
+        <input type="submit" value={editarGasto.id ? "Guardar Cambios" : "Añadir Gasto"} />
       </form>
     </div>
   );

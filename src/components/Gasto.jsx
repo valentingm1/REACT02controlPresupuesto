@@ -25,13 +25,13 @@ const listaIconos = {
   suscripciones: IconoSuscripciones,
 };
 
-const Gasto = ({ gasto }) => {
+const Gasto = ({ gasto, setEditarGasto,eliminarGasto }) => {
   const { nombre, categoria, cantidad, id, fecha } = gasto;
 
 
   const leadingActions = () => (
     <LeadingActions>
-      <SwipeAction onClick={() => {console.log("asa")}}>
+      <SwipeAction onClick={() => {setEditarGasto(gasto)}}>
         Editar
       </SwipeAction>
     </LeadingActions>
@@ -39,7 +39,8 @@ const Gasto = ({ gasto }) => {
 
   const trailingActions = () => (
     <TrailingActions>
-      <SwipeAction onClick={() => {console.log("osa")}}>
+      <SwipeAction onClick={() => {eliminarGasto(id)}}
+      destructive={true}>
         Eliminar
       </SwipeAction>
     </TrailingActions>

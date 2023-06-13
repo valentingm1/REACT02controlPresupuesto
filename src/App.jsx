@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { generarId } from "./components/helpers";
 import IconoNuevoGasto from "./img/nuevo-gasto.svg";
 
@@ -15,24 +15,51 @@ function App() {
 
   const [gastos, setGastos] = useState([]);
 
+  const [editarGasto, setEditarGasto] = useState({})
+
+  useEffect(() =>{
+    if( Object.keys(editarGasto).length > 0){
+      setModal(true);
+
+    setTimeout(() => {
+      setAnimarModal(true);
+    }, 250);
+    }
+  }, [editarGasto])
+
   const handleNuevoGasto = () => {
     setModal(true);
+
+    setEditarGasto({})
 
     setTimeout(() => {
       setAnimarModal(true);
     }, 250);
   };
 
-  const guardarGastos = (gasto) => {
-    gasto.id = generarId();
-    setGastos([...gastos, gasto]);
-
-    setAnimarModal(false);
-
+  const guardarGastos = gasto => {
+    if(gasto.id) {
+      // Actualizar
+      const gastosActualizados = gastos.map( gastoState => gastoState.id === gasto.id ? gasto : gastoState)
+      setGastos(gastosActualizados);
+      setEditarGasto({})
+    } else {
+      // Nuevo Gasto
+      gasto.id = generarId();
+      gasto.fecha = Date.now();
+      setGastos([...gastos, gasto ])
+    }
+    setAnimarModal(false)
     setTimeout(() => {
-      setModal(false);
-    }, 250);
-  };
+        setModal(false)
+    }, 500);
+  }
+
+  const eliminarGasto = id => {
+    const gastosActualizados = gastos.filter(gasto => gasto.id !== id)
+
+    setGastos(gastosActualizados)
+  }
 
   return (
     <div className={modal ? "fijar" : ""}>
@@ -48,7 +75,10 @@ function App() {
         <>
          <main>
           <ListadoGastos
-          gastos={gastos}/>
+          gastos={gastos}
+          setEditarGasto={setEditarGasto}
+          eliminarGasto={eliminarGasto}/>
+          
          </main>
           <div className="nuevo-gasto">
             <img
@@ -66,6 +96,8 @@ function App() {
           animarModal={animarModal}
           setAnimarModal={setAnimarModal}
           guardarGastos={guardarGastos}
+          editarGasto={editarGasto}
+          setEditarGasto={setEditarGasto}
         />
       )}
     </div>
